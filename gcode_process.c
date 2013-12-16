@@ -33,6 +33,9 @@ uint8_t tool;
 /// the tool to be changed when we get an M6
 uint8_t next_tool;
 
+// Added to have debug serial print
+#define serprintf(...) sersendf_P(__VA_ARGS__)
+
 
 /*
 	private functions
@@ -112,6 +115,7 @@ void process_gcode_command() {
 	    //? Select extruder number 1 to build with.  Extruder numbering starts at 0.
 
 	    next_tool = next_target.T;
+	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 	}
 
 	if (next_target.seen_G) {
@@ -386,6 +390,7 @@ void process_gcode_command() {
 				//?
 				//? Undocumented.
 				tool = next_tool;
+				serprintf(PSTR("Tool Change M6 Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 				break;
 
 			case 82:

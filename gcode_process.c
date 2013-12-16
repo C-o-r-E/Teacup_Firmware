@@ -391,6 +391,44 @@ void process_gcode_command() {
 				//? Undocumented.
 				tool = next_tool;
 				serprintf(PSTR("Tool Change M6 Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
+				/*
+                                serprintf(PSTR("DDRA=%x \n"), DDRA);
+                                serprintf(PSTR("PORTA=%x \n"), PORTA);
+                                
+				//Turn on CS1-1 chipselect line
+				DDRA |= _BV(0); //output
+				PORTA |= _BV(0); //set to high
+				delay_ms(100);
+				PORTA &= ~_BV(0); //set to high
+
+                                serprintf(PSTR("DDRA=%x \n"), DDRA);
+                                serprintf(PSTR("PORTA=%x \n"), PORTA);
+				*/
+                               
+                                #ifdef        PRR
+                                  PRR &= ~MASK(PRSPI);
+                                #elif defined PRR0
+                                  PRR0 &= ~MASK(PRSPI);
+                                #endif
+                                
+				serprintf(PSTR("Setting SPI [SPCR = %x] DDRB=%x\n"), SPCR, DDRB);
+				//initialization of SPI Master
+                                DDRB |= MASK(4); // set SS to out
+                                DDRB |= MASK(5); // set MOSI to out
+                                DDRB |= MASK(7); // set sck to out
+				SPCR = MASK(MSTR) | MASK(SPE) | MASK(SPR0); // spi enabled, master mode
+				//clr = SPSR; // dummy read registers to clear previous results
+				//clr = SPDR;
+				serprintf(PSTR("Done setting SPI [SPCR = %x] DDRB=%x\n"), SPCR, DDRB);
+
+
+				serprintf(PSTR("Send data \n"));
+				//Send data
+				SPDR = 6; // start the transmission by loading the output byte into the spi data register
+                                for (;(SPSR & MASK(SPIF)) == 0;);
+				serprintf(PSTR("Done SPI \n"));
+				
+
 				break;
 
 			case 82:

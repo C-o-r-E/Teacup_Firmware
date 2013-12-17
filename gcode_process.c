@@ -37,6 +37,92 @@ uint8_t next_tool;
 #define serprintf(...) sersendf_P(__VA_ARGS__)
 
 
+/* 
+   Some stuff we should refactor in to a new file. Probably
+*/
+uint8_t _spi_initialized;
+void _spi_init()
+{
+  if(_spi_initialized)
+    {
+      return;
+    }
+
+  //First make sure that the spi system is powered
+#ifdef        PRR
+  PRR &= ~MASK(PRSPI);
+#elif defined PRR0
+  PRR0 &= ~MASK(PRSPI);
+#endif
+
+  DDRB |= MASK(4); // set SS to output
+  DDRB |= MASK(5); // set MOSI to output
+  DDRB |= MASK(7); // set sck to output
+  SPCR = MASK(MSTR) | MASK(SPE) | MASK(SPR0); // spi enabled, master mode
+ 
+  _spi_initialized = 1;
+  delay_ms(1);
+}
+
+
+uint8_t _spi_send(uint8_t data)
+{
+  uint16_t count;
+
+  _spi_init();
+  SPDR = data; // start the transmission by loading the output byte into the spi data register
+  for (count=0; (SPSR & MASK(SPIF)) == 0; count++)
+    {
+      //this is needed for SPI
+    }
+
+  if(count > 0xff)
+    {
+      return 1; //error?
+    }
+
+  return 0;
+}
+
+//using custom board with max350
+void _fblb_module_select(uint8_t channel)
+{
+  uint8_t chanMask;
+  
+  //right now this is custom for 4 mirrored modules
+  
+  switch (channel)
+    {
+    case 0:
+      chanMask = 0b10000001; //NO0B and NO0A closed state
+      break;
+    case 1:
+      chanMask = 0b01000010; //NO1B and NO1A closed state
+      break;
+    case 2:
+      chanMask = 0b00100100; //NO2B and NO2A closed state
+      break;
+    case 3:
+      chanMask = 0b00011000; //NO3B and NO3A closed state
+      break;
+    default:
+      chanMask = 0b00000000; //No output. All circuit are in open state
+      break;
+  }
+
+  //set the CS low
+  PORTA &= ~MASK(0); // PA0
+
+  _spi_send(chanMask);_
+
+  //set the CS HIGH
+  PORTA |= MASK(0); // PA0
+
+  return;
+}
+
+
+
 /*
 	private functions
 
@@ -390,44 +476,7 @@ void process_gcode_command() {
 				//?
 				//? Undocumented.
 				tool = next_tool;
-				serprintf(PSTR("Tool Change M6 Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
-				/*
-                                serprintf(PSTR("DDRA=%x \n"), DDRA);
-                                serprintf(PSTR("PORTA=%x \n"), PORTA);
-                                
-				//Turn on CS1-1 chipselect line
-				DDRA |= _BV(0); //output
-				PORTA |= _BV(0); //set to high
-				delay_ms(100);
-				PORTA &= ~_BV(0); //set to high
-
-                                serprintf(PSTR("DDRA=%x \n"), DDRA);
-                                serprintf(PSTR("PORTA=%x \n"), PORTA);
-				*/
-                               
-                                #ifdef        PRR
-                                  PRR &= ~MASK(PRSPI);
-                                #elif defined PRR0
-                                  PRR0 &= ~MASK(PRSPI);
-                                #endif
-                                
-				serprintf(PSTR("Setting SPI [SPCR = %x] DDRB=%x\n"), SPCR, DDRB);
-				//initialization of SPI Master
-                                DDRB |= MASK(4); // set SS to out
-                                DDRB |= MASK(5); // set MOSI to out
-                                DDRB |= MASK(7); // set sck to out
-				SPCR = MASK(MSTR) | MASK(SPE) | MASK(SPR0); // spi enabled, master mode
-				//clr = SPSR; // dummy read registers to clear previous results
-				//clr = SPDR;
-				serprintf(PSTR("Done setting SPI [SPCR = %x] DDRB=%x\n"), SPCR, DDRB);
-
-
-				serprintf(PSTR("Send data \n"));
-				//Send data
-				SPDR = 6; // start the transmission by loading the output byte into the spi data register
-                                for (;(SPSR & MASK(SPIF)) == 0;);
-				serprintf(PSTR("Done SPI \n"));
-				
+				serprintf(PSTR("M6: tool is now %x\n"), tool);
 
 				break;
 

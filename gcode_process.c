@@ -113,7 +113,7 @@ void _fblb_module_select(uint8_t channel)
   //set the CS low
   PORTA &= ~MASK(0); // PA0
 
-  _spi_send(chanMask);_
+  _spi_send(chanMask);
 
   //set the CS HIGH
   PORTA |= MASK(0); // PA0
@@ -476,6 +476,7 @@ void process_gcode_command() {
 				//?
 				//? Undocumented.
 				tool = next_tool;
+				_fblb_module_select(tool);
 				serprintf(PSTR("M6: tool is now %x\n"), tool);
 
 				break;

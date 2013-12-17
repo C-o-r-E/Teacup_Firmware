@@ -84,6 +84,39 @@ uint8_t _spi_send(uint8_t data)
   return 0;
 }
 
+//Read from LS165
+uint8_t _fblb_read_lines()
+{
+  //Serial-in => PB4
+  //Clock => PD2
+  //R/W => PD3
+
+  uint8_t inByte;
+
+  inByte = 0;
+  DDRB &= ~MASK(4);
+  DDRD |= MASK(2) | MASK(3);
+
+  //Load the data from parallel in to the shift reg
+  PORTD &= ~MASK(3);
+  PORTD |= MASK(3);
+
+  //now let us read the byte (bit by bit)
+  for(int i=0; i<8; i++)
+    {
+      //read the pin
+      if(PINB & MASK(4))
+	{
+	  inByte |= (1<<i);
+	}
+      //clock it
+        PORTD &= ~MASK(2);
+	PORTD |= MASK(2);
+    }
+  
+}
+
+
 //using custom board with max350
 void _fblb_module_select(uint8_t channel)
 {

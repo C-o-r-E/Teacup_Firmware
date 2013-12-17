@@ -96,24 +96,28 @@ uint8_t _fblb_read_lines()
   inByte = 0;
   DDRB &= ~MASK(4);
   DDRD |= MASK(2) | MASK(3);
+  
+  PORTB &= ~MASK(4); //make sure B4 isnt pulled up
 
   //Load the data from parallel in to the shift reg
   PORTD &= ~MASK(3);
   PORTD |= MASK(3);
 
   //now let us read the byte (bit by bit)
-  for(int i=0; i<8; i++)
+  int i;
+  for(i=0; i<8; i++)
     {
       //read the pin
       if(PINB & MASK(4))
 	{
-	  inByte |= (1<<i);
+	  inByte |= ( 1<<(7-i) );
 	}
       //clock it
         PORTD &= ~MASK(2);
 	PORTD |= MASK(2);
     }
-  
+ 
+   return inByte; 
 }
 
 
@@ -511,7 +515,7 @@ void process_gcode_command() {
 				//?
 				//? Undocumented.
 				tool = next_tool;
-				_fblb_module_select(tool);
+				//_fblb_module_select(tool);
 				serprintf(PSTR("M6: tool is now %x\n"), tool);
 
 				serprintf(PSTR("Read from switches: %x\n"), _fblb_read_lines());

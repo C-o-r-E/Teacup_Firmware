@@ -43,7 +43,7 @@ uint8_t next_tool;
 uint8_t _spi_initialized;
 void _spi_init()
 {
-  if(_spi_initialized)
+  if(_spi_initialized == 1)
     {
       return;
     }
@@ -109,6 +109,8 @@ void _fblb_module_select(uint8_t channel)
       chanMask = 0b00000000; //No output. All circuit are in open state
       break;
   }
+  
+  DDRA |= MASK(0);
 
   //set the CS low
   PORTA &= ~MASK(0); // PA0

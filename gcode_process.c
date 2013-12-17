@@ -74,11 +74,11 @@ uint8_t _spi_send(uint8_t data)
   for (count=0; (SPSR & MASK(SPIF)) == 0; count++)
     {
       //this is needed for SPI
-    }
-
-  if(count > 0xff)
+      
+    if(count > 0xff)
     {
       return 1; //error?
+    }
     }
 
   return 0;
@@ -515,7 +515,7 @@ void process_gcode_command() {
 				//?
 				//? Undocumented.
 				tool = next_tool;
-				//_fblb_module_select(tool);
+				_fblb_module_select(tool);
 				serprintf(PSTR("M6: tool is now %x\n"), tool);
 
 				serprintf(PSTR("Read from switches: %x\n"), _fblb_read_lines());

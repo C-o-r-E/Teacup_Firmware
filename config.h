@@ -331,8 +331,11 @@
 #endif
 
 //                 name       type            pin        additional
-DEFINE_TEMP_SENSOR(extruder,  TT_AD595,  AIO4,      THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO3,      THERMISTOR_BED)
+DEFINE_TEMP_SENSOR(extruder0,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(extruder1,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(extruder2,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(extruder3,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO1,      THERMISTOR_BED)
 
 
 
@@ -383,7 +386,14 @@ DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO3,      THERMISTOR_BED)
 #endif
 
 //            name      port   pwm
-DEFINE_HEATER(extruder, PD5,   1)
+DEFINE_HEATER(extruder0, PD5,   1)
+
+//TODO
+DEFINE_HEATER(extruder1, PD6,   1)
+DEFINE_HEATER(extruder2, PD7,   1)
+DEFINE_HEATER(extruder3, PD0,   1)
+//
+
 DEFINE_HEATER(bed,      PD4,   1)
 
 /// and now because the c preprocessor isn't as smart as it could be,

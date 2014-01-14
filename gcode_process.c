@@ -518,7 +518,7 @@ void process_gcode_command() {
 				_fblb_module_select(tool);
 				serprintf(PSTR("M6: tool is now %x\n"), tool);
 
-				serprintf(PSTR("Read from switches: %x\n"), _fblb_read_lines());
+				//serprintf(PSTR("Read from switches: %x\n"), _fblb_read_lines());
 
 				break;
 

@@ -402,7 +402,11 @@ DEFINE_HEATER(bed,      PD4,   1)
 /// so if you list a bed above, uncomment HEATER_BED, but if you list a chamber you do NOT need to create HEATED_CHAMBER
 /// I have searched high and low for a way to make the preprocessor do this for us, but so far I have not found a way.
 
-#define	HEATER_EXTRUDER HEATER_extruder
+#define	HEATER_EXTRUDER HEATER_extruder0
+//#define	HEATER_EXTRUDER HEATER_extruder1
+//#define	HEATER_EXTRUDER HEATER_extruder2
+//#define	HEATER_EXTRUDER HEATER_extruder3
+
 #define HEATER_BED HEATER_bed
 
 

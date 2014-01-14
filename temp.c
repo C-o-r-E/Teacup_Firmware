@@ -118,6 +118,10 @@ void temp_sensor_tick() {
 		}
 		else {
 			uint16_t	temp = 0;
+			
+			//corey was here
+			//sersendf_P(PSTR("temp_sensor_tick(%d)\n"), i);
+
 			//time to deal with this temp sensor
 			switch(temp_sensors[i].temp_type) {
 				#ifdef	TEMP_MAX6675

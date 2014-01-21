@@ -48,6 +48,9 @@
 #include	"arduino.h"
 #include	"clock.h"
 #include	"intercom.h"
+
+#include        "fblb.h"
+
 #include "simulator.h"
 
 #ifdef SIMINFO
@@ -228,8 +231,11 @@ void init(void) {
 	// reset watchdog
 	wd_reset();
 
-  // prepare the power supply
-  power_init();
+	// prepare the power supply
+	power_init();
+
+	// fblb stuff
+	_fblb_module_select(0); // channel 0 by default
 
 	// say hi to host
 	serial_writestr_P(PSTR("start\nok\n"));

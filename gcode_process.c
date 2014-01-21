@@ -53,6 +53,19 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 }
 #endif /* E_STARTSTOP_STEPS > 0 */
 
+static void SpecialMoveAB() {
+  TARGET t = {10L, 10L, 0L, 0L, MAXIMUM_FEEDRATE_X * 2L, 1};
+
+  enqueue(&t);
+}
+
+static void SpecialMoveBA() {
+  TARGET t = {-10L, -10L, 0L, 0L, MAXIMUM_FEEDRATE_X * 2L, 1};
+
+  enqueue(&t);
+}
+
+
 /************************************************************************//**
 
   \brief Processes command stored in global \ref next_target.
@@ -118,6 +131,14 @@ void process_gcode_command() {
 
 	    next_tool = next_target.T;
 	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
+
+	    if ( (tool == 0) && (next_tool == 1) ) {
+	      SpecialMoveAB();
+	    }
+
+	    if ( (tool == 1) && (next_tool == 0) ) {
+	      SpecialMoveAB();
+	    }
 	}
 
 	if (next_target.seen_G) {

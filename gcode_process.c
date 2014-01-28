@@ -54,6 +54,8 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
+  serprintf(PSTR("Special AB: X=%d +%d Y=%d +%d\n"), current_position.X, EXT_OFFSET_AB_X);
+
   TARGET t = {
     current_position.X + EXT_OFFSET_AB_X,
     current_position.Y + EXT_OFFSET_AB_Y,
@@ -65,6 +67,8 @@ static void SpecialMoveAB(void) {
 }
 
 static void SpecialMoveBA(void) {
+  serprintf(PSTR("Special AB: X=%d +%d Y=%d +%d\n"), current_position.X, EXT_OFFSET_AB_X);
+
   TARGET t = {
     current_position.X - EXT_OFFSET_AB_X,
     current_position.Y - EXT_OFFSET_AB_Y,
@@ -144,12 +148,10 @@ void process_gcode_command() {
 
 	    update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
-	      serprintf(PSTR("move->AB\n"));
 	      SpecialMoveAB();
 	    }
 
 	    if ( (tool == 1) && (next_tool == 0) ) {
-	      serprintf(PSTR("move->BA\n"));
 	      SpecialMoveBA();
 	    }
 

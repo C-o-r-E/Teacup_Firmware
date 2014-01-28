@@ -54,13 +54,23 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-  TARGET t = {10, 10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 0};
+  TARGET t = {
+    EXT_OFFSET_AB_X,
+    EXT_OFFSET_AB_Y,
+    0,
+    0,
+    MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
 }
 
 static void SpecialMoveBA(void) {
-  TARGET t = {-10, -10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 0};
+  TARGET t = {
+    EXT_OFFSET_BA_X,
+    EXT_OFFSET_BA_Y,
+    0,
+    0,
+    MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
 }
@@ -171,6 +181,15 @@ void process_gcode_command() {
 				//?
 				//? Go in a straight line from the current (X, Y) point to the point (90.6, 13.8), extruding material as the move happens from the current extruded length to a length of 22.4 mm.
 				//?
+
+			  //deal with extruder offsets
+			  if (tool == 1) {
+			    //apply offsets
+			    &next_target.target.X += EXT_OFFSET_AB_X;
+			    &next_target.target.Y += EXT_OFFSET_AB_Y;
+			      
+			  }
+			  
 				enqueue(&next_target.target);
 				break;
 

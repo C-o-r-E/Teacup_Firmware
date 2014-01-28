@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define EXT_OFFSET_AB_X 10
+#define EXT_OFFSET_AB_Y 10
 
 
 uint8_t _fblb_read_lines(void);

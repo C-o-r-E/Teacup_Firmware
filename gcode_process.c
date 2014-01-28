@@ -190,8 +190,8 @@ void process_gcode_command() {
 			  //deal with extruder offsets
 			  if (tool == 1) {
 			    //apply offsets
-			    next_target.target.X -= EXT_OFFSET_AB_X;
-			    next_target.target.Y -= EXT_OFFSET_AB_Y;
+			    next_target.target.X += EXT_OFFSET_AB_X;
+			    next_target.target.Y += EXT_OFFSET_AB_Y;
 			      
 			  }
 			  

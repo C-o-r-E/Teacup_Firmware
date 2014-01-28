@@ -55,8 +55,8 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 
 static void SpecialMoveAB(void) {
   TARGET t = {
-    EXT_OFFSET_AB_X,
-    EXT_OFFSET_AB_Y,
+    current_position.X + EXT_OFFSET_AB_X,
+    current_position.Y + EXT_OFFSET_AB_Y,
     0,
     0,
     MAXIMUM_FEEDRATE_X * 2L, 0};
@@ -66,8 +66,8 @@ static void SpecialMoveAB(void) {
 
 static void SpecialMoveBA(void) {
   TARGET t = {
-    -EXT_OFFSET_AB_X,
-    -EXT_OFFSET_AB_Y,
+    current_position.X - EXT_OFFSET_AB_X,
+    current_position.Y - EXT_OFFSET_AB_Y,
     0,
     0,
     MAXIMUM_FEEDRATE_X * 2L, 0};
@@ -142,6 +142,7 @@ void process_gcode_command() {
 	    next_tool = next_target.T;
 	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 
+	    update_current_position()
 	    if ( (tool == 0) && (next_tool == 1) ) {
 	      serprintf(PSTR("move->AB\n"));
 	      SpecialMoveAB();
@@ -185,8 +186,8 @@ void process_gcode_command() {
 			  //deal with extruder offsets
 			  if (tool == 1) {
 			    //apply offsets
-			    &next_target.target.X -= EXT_OFFSET_AB_X;
-			    &next_target.target.Y -= EXT_OFFSET_AB_Y;
+			    next_target.target.X -= EXT_OFFSET_AB_X;
+			    next_target.target.Y -= EXT_OFFSET_AB_Y;
 			      
 			  }
 			  

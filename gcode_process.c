@@ -66,8 +66,8 @@ static void SpecialMoveAB(void) {
 
 static void SpecialMoveBA(void) {
   TARGET t = {
-    EXT_OFFSET_BA_X,
-    EXT_OFFSET_BA_Y,
+    -EXT_OFFSET_AB_X,
+    -EXT_OFFSET_AB_Y,
     0,
     0,
     MAXIMUM_FEEDRATE_X * 2L, 0};
@@ -185,8 +185,8 @@ void process_gcode_command() {
 			  //deal with extruder offsets
 			  if (tool == 1) {
 			    //apply offsets
-			    &next_target.target.X += EXT_OFFSET_AB_X;
-			    &next_target.target.Y += EXT_OFFSET_AB_Y;
+			    &next_target.target.X -= EXT_OFFSET_AB_X;
+			    &next_target.target.Y -= EXT_OFFSET_AB_Y;
 			      
 			  }
 			  

@@ -139,6 +139,11 @@ void process_gcode_command() {
 	    if ( (tool == 1) && (next_tool == 0) ) {
 	      SpecialMoveBA();
 	    }
+
+	    tool = next_tool;
+	    _fblb_module_select(tool);
+	    //serprintf(PSTR("M6: tool is now %x\n"), tool);
+
 	}
 
 	if (next_target.seen_G) {
@@ -412,11 +417,6 @@ void process_gcode_command() {
 				//? --- M6: tool change ---
 				//?
 				//? Undocumented.
-				tool = next_tool;
-				_fblb_module_select(tool);
-				serprintf(PSTR("M6: tool is now %x\n"), tool);
-
-				//serprintf(PSTR("Read from switches: %x\n"), _fblb_read_lines());
 
 				break;
 

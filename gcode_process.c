@@ -54,13 +54,13 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-  TARGET t = {10, 10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 1};
+  TARGET t = {10, 10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
 }
 
 static void SpecialMoveBA(void) {
-  TARGET t = {-10, -10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 1};
+  TARGET t = {-10, -10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
 }

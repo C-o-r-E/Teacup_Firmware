@@ -54,13 +54,13 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-  TARGET t = {10L, 10L, 0L, 0L, MAXIMUM_FEEDRATE_X * 2L, 1};
+  TARGET t = {10, 10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 1};
 
   enqueue(&t);
 }
 
 static void SpecialMoveBA(void) {
-  TARGET t = {-10L, -10L, 0L, 0L, MAXIMUM_FEEDRATE_X * 2L, 1};
+  TARGET t = {-10, -10, 0, 0, MAXIMUM_FEEDRATE_X * 2L, 1};
 
   enqueue(&t);
 }
@@ -133,10 +133,12 @@ void process_gcode_command() {
 	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 
 	    if ( (tool == 0) && (next_tool == 1) ) {
+	      serprintf(PSTR("move->AB\n"));
 	      SpecialMoveAB();
 	    }
 
 	    if ( (tool == 1) && (next_tool == 0) ) {
+	      serprintf(PSTR("move->BA\n"));
 	      SpecialMoveBA();
 	    }
 

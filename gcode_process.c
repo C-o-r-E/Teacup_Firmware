@@ -57,8 +57,8 @@ static void SpecialMoveAB(void) {
   TARGET t = {
     current_position.X + EXT_OFFSET_AB_X,
     current_position.Y + EXT_OFFSET_AB_Y,
-    0,
-    0,
+    current_position.Z,
+    current_position.E,
     MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
@@ -68,8 +68,8 @@ static void SpecialMoveBA(void) {
   TARGET t = {
     current_position.X - EXT_OFFSET_AB_X,
     current_position.Y - EXT_OFFSET_AB_Y,
-    0,
-    0,
+    current_position.Z,
+    current_position.E,
     MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
@@ -142,7 +142,7 @@ void process_gcode_command() {
 	    next_tool = next_target.T;
 	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 
-	    update_current_position()
+	    update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
 	      serprintf(PSTR("move->AB\n"));
 	      SpecialMoveAB();

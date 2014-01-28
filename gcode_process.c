@@ -57,8 +57,6 @@ static void SpecialMoveAB(void) {
   long off_x = EXT_OFFSET_AB_X;
   long off_y = EXT_OFFSET_AB_Y;
 
-  serprintf(PSTR("Special AB: X=%d +%d Y=%d +%d\n"), current_position.X, EXT_OFFSET_AB_X);
-
   TARGET t = {
     current_position.X + off_x,
     current_position.Y + off_y,
@@ -70,11 +68,12 @@ static void SpecialMoveAB(void) {
 }
 
 static void SpecialMoveBA(void) {
-  serprintf(PSTR("Special AB: X=%d +%d Y=%d +%d\n"), current_position.X, EXT_OFFSET_AB_X);
+  long off_x = EXT_OFFSET_AB_X;
+  long off_y = EXT_OFFSET_AB_Y;
 
   TARGET t = {
-    current_position.X - EXT_OFFSET_AB_X,
-    current_position.Y - EXT_OFFSET_AB_Y,
+    current_position.X - off_x,
+    current_position.Y - off_y,
     current_position.Z,
     current_position.E,
     MAXIMUM_FEEDRATE_X * 2L, 0};

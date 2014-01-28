@@ -5,8 +5,8 @@
 
 
 // note that we use a special format here
-#define EXT_OFFSET_AB_X 10000
-#define EXT_OFFSET_AB_Y 10000
+#define EXT_OFFSET_AB_X 123000
+#define EXT_OFFSET_AB_Y -300
 
 
 uint8_t _fblb_read_lines(void);

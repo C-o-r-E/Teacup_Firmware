@@ -213,4 +213,6 @@ void dda_clock(void);
 // update current_position
 void update_current_position(void);
 
+void modify_current_position(int32_t x, int32_t y);
+
 #endif	/* _DDA_H */

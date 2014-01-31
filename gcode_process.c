@@ -65,6 +65,10 @@ static void SpecialMoveAB(void) {
     MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
+
+  queue_wait();
+  current_position.X -= off_x;
+  current_position.Y -= off_y;
 }
 
 static void SpecialMoveBA(void) {
@@ -79,6 +83,10 @@ static void SpecialMoveBA(void) {
     MAXIMUM_FEEDRATE_X * 2L, 0};
 
   enqueue(&t);
+
+  queue_wait();
+  current_position.X += off_x;
+  current_position.Y += off_y;
 }
 
 
@@ -148,6 +156,8 @@ void process_gcode_command() {
 	    next_tool = next_target.T;
 	    serprintf(PSTR("Tool Change T Detected - tool=%d, next_tool=%d \n"), tool, next_tool);
 
+	    queue_wait();
+
 	    update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
 	      SpecialMoveAB();
@@ -187,14 +197,6 @@ void process_gcode_command() {
 				//? Go in a straight line from the current (X, Y) point to the point (90.6, 13.8), extruding material as the move happens from the current extruded length to a length of 22.4 mm.
 				//?
 
-			  //deal with extruder offsets
-			  if (tool == 1) {
-			    //apply offsets
-			    next_target.target.X += EXT_OFFSET_AB_X;
-			    next_target.target.Y += EXT_OFFSET_AB_Y;
-			      
-			  }
-			  
 				enqueue(&next_target.target);
 				break;
 

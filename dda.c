@@ -875,6 +875,21 @@ void dda_clock() {
   busy = 0;
 }
 
+/// modify global current_position struct
+void modify_current_position(int32_t x, int32_t y)
+{
+  DDA *dda = &movebuffer[mb_tail];
+
+  if(queue_empty()) {
+    current_position.X = x;
+    current_position.Y = y;
+  }
+  else if (dda->live) {
+    sersendf_P(PSTR("error: modify called during move!!!\n"));
+  }
+
+}
+
 /// update global current_position struct
 void update_current_position() {
 	DDA *dda = &movebuffer[mb_tail];

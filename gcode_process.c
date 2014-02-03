@@ -54,7 +54,10 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-
+  serprintf(PSTR("AB: move from %q to %q\n"),
+    current_position.X,
+    current_position.X + EXT_OFFSET_AB_X);
+    
   TARGET t = {
     current_position.X + EXT_OFFSET_AB_X,
     current_position.Y + EXT_OFFSET_AB_Y,
@@ -68,6 +71,9 @@ static void SpecialMoveAB(void) {
 }
 
 static void SpecialMoveBA(void) {
+  serprintf(PSTR("BA: move from %q to %q\n"),
+    current_position.X,
+    current_position.X - EXT_OFFSET_AB_X);
 
   TARGET t = {
     current_position.X - EXT_OFFSET_AB_X,
@@ -150,7 +156,7 @@ void process_gcode_command() {
 
 	    queue_wait();
 
-	    //update_current_position();
+	    update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
 	      SpecialMoveAB();
 	    }
@@ -161,6 +167,7 @@ void process_gcode_command() {
 
 	    tool = next_tool;
 	    _fblb_module_select(tool);
+            update_current_position();
 	    //serprintf(PSTR("M6: tool is now %x\n"), tool);
 
 	}
@@ -178,12 +185,15 @@ void process_gcode_command() {
 				backup_f = next_target.target.F;
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
 
-				if (tool == 1)
+				if ( tool == 1 )
 				  {
-				    serprintf(PSTR("G0 modify X: %d\n"), next_target.target.X);
-				    next_target.target.X += EXT_OFFSET_AB_X;
-				    next_target.target.Y += EXT_OFFSET_AB_Y;
-				    serprintf(PSTR("          X: %d\n"), next_target.target.X);
+				    serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+				    if (next_target.seen_X)
+                                      next_target.target.X += EXT_OFFSET_AB_X;
+				    if (next_target.seen_Y)
+                                      next_target.target.Y += EXT_OFFSET_AB_Y;
+				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+                                    update_current_position();
 				  }
 
 				enqueue(&next_target.target);
@@ -201,10 +211,13 @@ void process_gcode_command() {
 
 			  if (tool == 1)
 			    {
-			      serprintf(PSTR("G1 modify X: %d\n"), next_target.target.X);
-			      next_target.target.X += EXT_OFFSET_AB_X;
-			      next_target.target.Y += EXT_OFFSET_AB_Y;
-			      serprintf(PSTR("          X: %d\n"), next_target.target.X);
+                                   serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+				    if (next_target.seen_X)
+                                      next_target.target.X += EXT_OFFSET_AB_X;
+				    if (next_target.seen_Y)
+                                      next_target.target.Y += EXT_OFFSET_AB_Y;
+				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y); 
+                                update_current_position();
 			    }
 
 				enqueue(&next_target.target);
@@ -305,6 +318,12 @@ void process_gcode_command() {
 				if (!axisSelected) {
 					home();
 				}
+
+                                if (tool == 1)
+                                {
+                                  update_current_position();
+                                  SpecialMoveAB();
+                                }
 				break;
 
 			case 90:
@@ -649,8 +668,8 @@ void process_gcode_command() {
 
 				if (tool == 1)
 				  {
-				    current_position.X += EXT_OFFSET_AB_X;
-				    current_position.Y += EXT_OFFSET_AB_Y;
+				    current_position.X -= EXT_OFFSET_AB_X;
+				    current_position.Y -= EXT_OFFSET_AB_Y;
 				  }
 
 				sersendf_P(PSTR("X:%lq,Y:%lq,Z:%lq,E:%lq,F:%lu"),

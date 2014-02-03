@@ -89,6 +89,11 @@ static void SpecialMoveBA(void) {
 
 void ext_modify_target()
 {
+
+	// THIS DEFEATS THE POINT OF THE QUEUE
+	// TODO: Figure out why ext_modify_target() fails when moves are queued 
+	queue_wait();
+
 	if (next_target.seen_X)
 	{
 		if ( tool == 1 )

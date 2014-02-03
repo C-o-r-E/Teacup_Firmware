@@ -188,11 +188,26 @@ void process_gcode_command() {
 				if ( tool == 1 )
 				{
 				    serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+
 				    if (next_target.seen_X)
+					{
 						next_target.target.X += EXT_OFFSET_AB_X;
+					}
+					else
+					{
+						next_target.target.X = current_position.X;
+					}
+
 				    if (next_target.seen_Y)
+					{
 						next_target.target.Y += EXT_OFFSET_AB_Y;
-				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+				    }
+					else
+					{
+						next_target.target.Y = current_position.Y;
+					}
+
+					serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
 					//update_current_position();
 				}
 				

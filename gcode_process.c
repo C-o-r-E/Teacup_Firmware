@@ -115,18 +115,21 @@ void ext_modify_target()
 
 	if (next_target.seen_Y)
 	{
-		serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
-				  next_target.G,
-				  next_target.target.X,
-				  next_target.target.Y);
-
-		next_target.target.Y += EXT_OFFSET_AB_Y;
-
-		serprintf(PSTR("          X: %q, Y: %q\n"),
-				  next_target.target.X,
-				  next_target.target.Y);
-		
-		//update_current_position();				
+		if ( tool == 1 )
+		{
+			serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
+					  next_target.G,
+					  next_target.target.X,
+					  next_target.target.Y);
+			
+			next_target.target.Y += EXT_OFFSET_AB_Y;
+			
+			serprintf(PSTR("          X: %q, Y: %q\n"),
+					  next_target.target.X,
+					  next_target.target.Y);
+			
+			//update_current_position();
+		} 				
 	}
 	else
 	{

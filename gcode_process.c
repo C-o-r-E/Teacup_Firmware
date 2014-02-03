@@ -54,37 +54,37 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-  serprintf(PSTR("AB: move from %q to %q\n"),
-    current_position.X,
-    current_position.X + EXT_OFFSET_AB_X);
+	serprintf(PSTR("AB: move from %q to %q\n"),
+			  current_position.X,
+			  current_position.X + EXT_OFFSET_AB_X);
     
-  TARGET t = {
-    current_position.X + EXT_OFFSET_AB_X,
-    current_position.Y + EXT_OFFSET_AB_Y,
-    current_position.Z,
-    current_position.E,
-    MAXIMUM_FEEDRATE_X * 2L, 0};
-
-  enqueue(&t);
-
-  queue_wait();
+	TARGET t = {
+		current_position.X + EXT_OFFSET_AB_X,
+		current_position.Y + EXT_OFFSET_AB_Y,
+		current_position.Z,
+		current_position.E,
+		MAXIMUM_FEEDRATE_X * 2L, 0};
+	
+	enqueue(&t);
+	
+	queue_wait();
 }
 
 static void SpecialMoveBA(void) {
-  serprintf(PSTR("BA: move from %q to %q\n"),
-    current_position.X,
-    current_position.X - EXT_OFFSET_AB_X);
-
-  TARGET t = {
-    current_position.X - EXT_OFFSET_AB_X,
-    current_position.Y - EXT_OFFSET_AB_Y,
-    current_position.Z,
-    current_position.E,
-    MAXIMUM_FEEDRATE_X * 2L, 0};
-
-  enqueue(&t);
-
-  queue_wait();
+	serprintf(PSTR("BA: move from %q to %q\n"),
+			  current_position.X,
+			  current_position.X - EXT_OFFSET_AB_X);
+	
+	TARGET t = {
+		current_position.X - EXT_OFFSET_AB_X,
+		current_position.Y - EXT_OFFSET_AB_Y,
+		current_position.Z,
+		current_position.E,
+		MAXIMUM_FEEDRATE_X * 2L, 0};
+	
+	enqueue(&t);
+	
+	queue_wait();
 }
 
 
@@ -158,18 +158,18 @@ void process_gcode_command() {
 
 	    update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
-	      SpecialMoveAB();
+			SpecialMoveAB();
 	    }
-
+		
 	    if ( (tool == 1) && (next_tool == 0) ) {
-	      SpecialMoveBA();
+			SpecialMoveBA();
 	    }
-
+		
 	    tool = next_tool;
 	    _fblb_module_select(tool);
-            update_current_position();
+		update_current_position();
 	    //serprintf(PSTR("M6: tool is now %x\n"), tool);
-
+		
 	}
 
 	if (next_target.seen_G) {
@@ -186,16 +186,16 @@ void process_gcode_command() {
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
 
 				if ( tool == 1 )
-				  {
+				{
 				    serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
 				    if (next_target.seen_X)
-                                      next_target.target.X += EXT_OFFSET_AB_X;
+						next_target.target.X += EXT_OFFSET_AB_X;
 				    if (next_target.seen_Y)
-                                      next_target.target.Y += EXT_OFFSET_AB_Y;
+						next_target.target.Y += EXT_OFFSET_AB_Y;
 				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
-                                    update_current_position();
-				  }
-
+					//update_current_position();
+				}
+				
 				enqueue(&next_target.target);
 				next_target.target.F = backup_f;
 				break;
@@ -209,15 +209,15 @@ void process_gcode_command() {
 				//?
 
 
-			  if (tool == 1)
+				if (tool == 1)
 			    {
-                                   serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
+					serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
 				    if (next_target.seen_X)
-                                      next_target.target.X += EXT_OFFSET_AB_X;
+						next_target.target.X += EXT_OFFSET_AB_X;
 				    if (next_target.seen_Y)
-                                      next_target.target.Y += EXT_OFFSET_AB_Y;
+						next_target.target.Y += EXT_OFFSET_AB_Y;
 				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y); 
-                                update_current_position();
+					//update_current_position();
 			    }
 
 				enqueue(&next_target.target);

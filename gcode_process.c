@@ -54,12 +54,10 @@ static void SpecialMoveE(int32_t e, uint32_t f) {
 #endif /* E_STARTSTOP_STEPS > 0 */
 
 static void SpecialMoveAB(void) {
-  long off_x = EXT_OFFSET_AB_X;
-  long off_y = EXT_OFFSET_AB_Y;
 
   TARGET t = {
-    current_position.X + off_x,
-    current_position.Y + off_y,
+    current_position.X + EXT_OFFSET_AB_X,
+    current_position.Y + EXT_OFFSET_AB_Y,
     current_position.Z,
     current_position.E,
     MAXIMUM_FEEDRATE_X * 2L, 0};
@@ -67,17 +65,13 @@ static void SpecialMoveAB(void) {
   enqueue(&t);
 
   queue_wait();
-  current_position.X -= off_x;
-  current_position.Y -= off_y;
 }
 
 static void SpecialMoveBA(void) {
-  long off_x = EXT_OFFSET_AB_X;
-  long off_y = EXT_OFFSET_AB_Y;
 
   TARGET t = {
-    current_position.X - off_x,
-    current_position.Y - off_y,
+    current_position.X - EXT_OFFSET_AB_X,
+    current_position.Y - EXT_OFFSET_AB_Y,
     current_position.Z,
     current_position.E,
     MAXIMUM_FEEDRATE_X * 2L, 0};
@@ -85,8 +79,6 @@ static void SpecialMoveBA(void) {
   enqueue(&t);
 
   queue_wait();
-  current_position.X += off_x;
-  current_position.Y += off_y;
 }
 
 
@@ -158,7 +150,7 @@ void process_gcode_command() {
 
 	    queue_wait();
 
-	    update_current_position();
+	    //update_current_position();
 	    if ( (tool == 0) && (next_tool == 1) ) {
 	      SpecialMoveAB();
 	    }
@@ -185,6 +177,15 @@ void process_gcode_command() {
 				//?
 				backup_f = next_target.target.F;
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
+
+				if (tool == 1)
+				  {
+				    serprintf(PSTR("G0 modify X: %d\n"), next_target.target.X);
+				    next_target.target.X += EXT_OFFSET_AB_X;
+				    next_target.target.Y += EXT_OFFSET_AB_Y;
+				    serprintf(PSTR("          X: %d\n"), next_target.target.X);
+				  }
+
 				enqueue(&next_target.target);
 				next_target.target.F = backup_f;
 				break;
@@ -196,6 +197,15 @@ void process_gcode_command() {
 				//?
 				//? Go in a straight line from the current (X, Y) point to the point (90.6, 13.8), extruding material as the move happens from the current extruded length to a length of 22.4 mm.
 				//?
+
+
+			  if (tool == 1)
+			    {
+			      serprintf(PSTR("G1 modify X: %d\n"), next_target.target.X);
+			      next_target.target.X += EXT_OFFSET_AB_X;
+			      next_target.target.Y += EXT_OFFSET_AB_Y;
+			      serprintf(PSTR("          X: %d\n"), next_target.target.X);
+			    }
 
 				enqueue(&next_target.target);
 				break;
@@ -636,6 +646,13 @@ void process_gcode_command() {
 					queue_wait();
 				#endif
 				update_current_position();
+
+				if (tool == 1)
+				  {
+				    current_position.X += EXT_OFFSET_AB_X;
+				    current_position.Y += EXT_OFFSET_AB_Y;
+				  }
+
 				sersendf_P(PSTR("X:%lq,Y:%lq,Z:%lq,E:%lq,F:%lu"),
 				                current_position.X, current_position.Y,
 				                current_position.Z, current_position.E,

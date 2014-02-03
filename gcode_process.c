@@ -87,6 +87,53 @@ static void SpecialMoveBA(void) {
 	queue_wait();
 }
 
+void ext_modify_target()
+{
+	if (next_target.seen_X)
+	{
+		if ( tool == 1 )
+		{
+			serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
+					  next_target.G,
+					  next_target.target.X,
+					  next_target.target.Y);
+
+			next_target.target.X += EXT_OFFSET_AB_X;
+
+			serprintf(PSTR("          X: %q, Y: %q\n"),
+					  next_target.target.X,
+					  next_target.target.Y);
+
+			//update_current_position();
+		}
+	}
+	else
+	{
+		next_target.target.X = current_position.X;
+	}
+				    
+
+	if (next_target.seen_Y)
+	{
+		serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
+				  next_target.G,
+				  next_target.target.X,
+				  next_target.target.Y);
+
+		next_target.target.Y += EXT_OFFSET_AB_Y;
+
+		serprintf(PSTR("          X: %q, Y: %q\n"),
+				  next_target.target.X,
+				  next_target.target.Y);
+		
+		//update_current_position();				
+	}
+	else
+	{
+		next_target.target.Y = current_position.Y;
+	}
+
+}
 
 /************************************************************************//**
 
@@ -184,32 +231,9 @@ void process_gcode_command() {
 				//?
 				backup_f = next_target.target.F;
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
-
-				if ( tool == 1 )
-				{
-				    serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
-
-				    if (next_target.seen_X)
-					{
-						next_target.target.X += EXT_OFFSET_AB_X;
-					}
-					else
-					{
-						next_target.target.X = current_position.X;
-					}
-
-				    if (next_target.seen_Y)
-					{
-						next_target.target.Y += EXT_OFFSET_AB_Y;
-				    }
-					else
-					{
-						next_target.target.Y = current_position.Y;
-					}
-
-					serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
-					//update_current_position();
-				}
+				
+				//deal with offsets for non default extruder
+				ext_modify_target();
 				
 				enqueue(&next_target.target);
 				next_target.target.F = backup_f;
@@ -223,17 +247,8 @@ void process_gcode_command() {
 				//? Go in a straight line from the current (X, Y) point to the point (90.6, 13.8), extruding material as the move happens from the current extruded length to a length of 22.4 mm.
 				//?
 
-
-				if (tool == 1)
-			    {
-					serprintf(PSTR("G0 modify X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y);
-				    if (next_target.seen_X)
-						next_target.target.X += EXT_OFFSET_AB_X;
-				    if (next_target.seen_Y)
-						next_target.target.Y += EXT_OFFSET_AB_Y;
-				    serprintf(PSTR("          X: %q, Y: %q\n"), next_target.target.X, next_target.target.Y); 
-					//update_current_position();
-			    }
+				//deal with offsets for non default extruder
+				ext_modify_target();
 
 				enqueue(&next_target.target);
 				break;

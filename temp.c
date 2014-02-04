@@ -371,14 +371,27 @@ static void single_temp_print(temp_sensor_t index) {
 void temp_print(temp_sensor_t index) {
 
 	if (index == TEMP_SENSOR_none) { // standard behaviour
-		#ifdef HEATER_EXTRUDER
+		/*#ifdef HEATER_EXTRUDER
 			sersendf_P(PSTR("T:"));
 			single_temp_print(HEATER_EXTRUDER);
 		#endif
 		#ifdef HEATER_BED
 			sersendf_P(PSTR(" B:"));
 			single_temp_print(HEATER_BED);
-		#endif
+			#endif*/
+
+		//new default behavior is to print each of the temps
+
+		int i;
+		for (i=0; i<4; i++)
+		{
+			sersendf_P(PSTR(" T%d:"));
+			single_temp_print(i);
+		}
+
+		sersendf_P(PSTR(" B:"));
+		single_temp_print(HEATER_BED);
+
 	}
 	else {
 		if (index >= NUM_TEMP_SENSORS)

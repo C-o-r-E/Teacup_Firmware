@@ -385,7 +385,7 @@ void temp_print(temp_sensor_t index) {
 		int i;
 		for (i=0; i<4; i++)
 		{
-			sersendf_P(PSTR(" T%d:"));
+			sersendf_P(PSTR(" T%d:"), i);
 			single_temp_print(i);
 		}
 

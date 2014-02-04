@@ -87,7 +87,7 @@ static void SpecialMoveBA(void) {
 	queue_wait();
 }
 
-void ext_modify_target()
+void ext_modify_target(void)
 {
 
 	// THIS DEFEATS THE POINT OF THE QUEUE

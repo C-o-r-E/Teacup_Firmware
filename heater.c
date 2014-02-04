@@ -14,6 +14,8 @@
 #include "pinio.h"
 #include	"crc.h"
 
+#include "fblb.h"
+
 #ifndef	EXTRUDER
 	#include	"sersendf.h"
 #endif
@@ -293,6 +295,26 @@ void heater_tick(heater_t h, temp_type_t type, uint16_t current_temp, uint16_t t
 
 	if (h >= NUM_HEATERS)
 		return;
+
+	//this is a total hack
+
+	if (h < 4) // one of our 4 extruders
+	{
+		uint8_t chan; //what channel are we selected on
+		
+		chan = _fblb_get_selected_channel(); // not atomic but we will get the right val eventually
+
+		if (h == chan)
+		{
+			//sersendf_P(PSTR("heater tick %d \n"), h);	
+		}
+		else
+		{
+			heater_set(h,0);
+			return;
+		}
+
+	}
 
 	if (target_temp == 0) {
 		heater_set(h, 0);

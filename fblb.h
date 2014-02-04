@@ -13,4 +13,6 @@ uint8_t _fblb_read_lines(void);
 
 void _fblb_module_select(uint8_t channel);
 
+uint8_t _fblb_get_selected_channel(void);
+
 #endif

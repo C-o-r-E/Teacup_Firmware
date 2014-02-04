@@ -11,6 +11,8 @@
 
 uint8_t _spi_initialized;
 
+uint8_t current_channel;
+
 void delay_ms(unsigned char ms);
 
 void _spi_init(void)
@@ -133,10 +135,17 @@ void _fblb_module_select(uint8_t channel)
   PORTA |= MASK(0); // PA0
 
   if (ret != 0)
-    {
+  {
       serprintf(PSTR("spi_send returned an error!\n"));
-    }
+  }
+
+  current_channel = channel;
 
   return;
+}
+
+uint8_t _fblb_get_selected_channel(void)
+{
+	return current_channel;
 }
 

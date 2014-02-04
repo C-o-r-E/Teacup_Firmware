@@ -604,7 +604,18 @@ void process_gcode_command() {
             next_target.P = HEATER_EXTRUDER;
         // else use the first available device
         #endif
-				temp_set(next_target.P, next_target.S);
+
+		  //fblb version
+		  if(next_target.seen_T)
+		  {
+			  temp_set(next_target.T, next_target.S);
+		  }
+		  else
+		  {
+			  temp_set(next_target.P, next_target.S);
+		  }
+
+		  //temp_set(next_target.P, next_target.S);
 				break;
 
 			case 105:

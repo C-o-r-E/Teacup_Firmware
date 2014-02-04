@@ -306,11 +306,10 @@ void heater_tick(heater_t h, temp_type_t type, uint16_t current_temp, uint16_t t
 
 		if (h == chan)
 		{
-			//sersendf_P(PSTR("heater tick %d \n"), h);	
+			sersendf_P(PSTR("chan %d target %d \n"), h, target_temp);	
 		}
 		else
 		{
-			heater_set(h,0);
 			return;
 		}
 

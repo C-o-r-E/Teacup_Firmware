@@ -306,7 +306,9 @@ void heater_tick(heater_t h, temp_type_t type, uint16_t current_temp, uint16_t t
 
 		if (h == chan)
 		{
-			sersendf_P(PSTR("chan %d target %d \n"), h, target_temp);	
+			sersendf_P(PSTR("chan %d temps (cur, targ): (%u.%u, %u.%u) \n"), h,
+                                        (current_temp >> 2), (current_temp & 3) * 25,
+                                        (target_temp >> 2), (target_temp & 3) * 25);	
 		}
 		else
 		{

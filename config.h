@@ -230,19 +230,19 @@
 //#define	X_MAX_PIN   					DIO2
 #define	X_ENABLE_PIN					DIO38
 //#define	X_INVERT_DIR
-//#define	X_INVERT_MIN
+#define	X_INVERT_MIN
 //#define	X_INVERT_MAX
-//#define	X_INVERT_ENABLE
+#define	X_INVERT_ENABLE
 
 #define	Y_STEP_PIN  					AIO6
 #define	Y_DIR_PIN   					AIO7
 #define	Y_MIN_PIN   					DIO14
 //#define	Y_MAX_PIN   					DIO15
 #define	Y_ENABLE_PIN					AIO2
-#define	Y_INVERT_DIR
-//#define	Y_INVERT_MIN
+//#define	Y_INVERT_DIR
+#define	Y_INVERT_MIN
 //#define	Y_INVERT_MAX
-//#define	Y_INVERT_ENABLE
+#define	Y_INVERT_ENABLE
 
 #define	Z_STEP_PIN  					DIO46
 #define	Z_DIR_PIN   					DIO48
@@ -250,22 +250,22 @@
 #define	Z_MIN_PIN   					DIO18
 //#define	Z_MAX_PIN   					DIO19
 #define	Z_ENABLE_PIN					AIO8
-//#define	Z_INVERT_MIN
+#define	Z_INVERT_MIN
 //#define	Z_INVERT_MAX
-//#define	Z_INVERT_ENABLE
+#define	Z_INVERT_ENABLE
 
 #define	E_STEP_PIN  					DIO26
 #define	E_DIR_PIN   					DIO28
-#define E_ENABLE_PIN          DIO24
+#define E_ENABLE_PIN                                    DIO24
 //#define	E_INVERT_DIR
 #define E_INVERT_ENABLE
 
 //###
-#define	E1_STEP_PIN  					DIO26
-#define	E1_DIR_PIN   					DIO28
-#define E1_ENABLE_PIN          DIO24
+//#define	E1_STEP_PIN  					DIO26
+//#define	E1_DIR_PIN   					DIO28
+//#define E1_ENABLE_PIN                                    DIO24
 //#define	E1_INVERT_DIR
-#define E1_INVERT_ENABLE
+//#define E1_INVERT_ENABLE
 //###
 
 //#define	PS_ON_PIN							xxxx
@@ -342,7 +342,7 @@
 
 //                 name       type            pin        additional
 DEFINE_TEMP_SENSOR(extruder0,  TT_AD595,  AIO11,     THERMISTOR_EXTRUDER)
-//DEFINE_TEMP_SENSOR(extruder1,  TT_AD595,  AIO13,     THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(extruder1,  TT_AD595,  AIO13,     THERMISTOR_EXTRUDER)
 
 DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO12,     THERMISTOR_BED)
 
@@ -407,7 +407,7 @@ DEFINE_HEATER( bed,     PH5,   1)
 /// I have searched high and low for a way to make the preprocessor do this for us, but so far I have not found a way.
 
 #define	HEATER_EXTRUDER HEATER_extruder0
-//#define	HEATER_EXTRUDER HEATER_extruder1
+#define	HEATER_EXTRUDER HEATER_extruder1
 #define HEATER_BED HEATER_bed
 
 

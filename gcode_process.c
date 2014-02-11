@@ -89,11 +89,17 @@ static void SpecialMoveBA(void) {
 
 void ext_modify_target(void)
 {
-
+  
 	// THIS DEFEATS THE POINT OF THE QUEUE
 	// TODO: Figure out why ext_modify_target() fails when moves are queued 
 	queue_wait();
 
+        if(next_target.option_all_relative)
+        {
+          //serprintf(PSTR("WARNING --- RELATIVE COORDS!!\n"));
+          return;
+        } 
+        
 	if (next_target.seen_X)
 	{
 		if ( tool == 1 )
@@ -114,7 +120,16 @@ void ext_modify_target(void)
 	}
 	else
 	{
+  			serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
+					  next_target.G,
+					  next_target.target.X,
+					  next_target.target.Y);
+
 		next_target.target.X = current_position.X;
+
+			serprintf(PSTR("          X: %q, Y: %q\n"),
+					  next_target.target.X,
+					  next_target.target.Y);
 	}
 				    
 
@@ -138,7 +153,16 @@ void ext_modify_target(void)
 	}
 	else
 	{
+  			serprintf(PSTR("G%d modify X: %q, Y: %q\n"),
+					  next_target.G,
+					  next_target.target.X,
+					  next_target.target.Y);
+  
 		next_target.target.Y = current_position.Y;
+
+			serprintf(PSTR("          X: %q, Y: %q\n"),
+					  next_target.target.X,
+					  next_target.target.Y);
 	}
 
 }
@@ -240,6 +264,7 @@ void process_gcode_command() {
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
 				
 				//deal with offsets for non default extruder
+                                update_current_position();
 				ext_modify_target();
 				
 				enqueue(&next_target.target);
@@ -255,6 +280,7 @@ void process_gcode_command() {
 				//?
 
 				//deal with offsets for non default extruder
+                                update_current_position();
 				ext_modify_target();
 
 				enqueue(&next_target.target);

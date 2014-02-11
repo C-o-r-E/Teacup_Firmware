@@ -67,7 +67,7 @@
 #define	STEPS_PER_M_Z					3333592
 
 /// http://blog.arcol.hu/?p=157 may help with this one
-#define	STEPS_PER_M_E					11036
+#define	STEPS_PER_M_E					225000//11036
 
 
 /*

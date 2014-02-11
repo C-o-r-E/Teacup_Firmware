@@ -223,7 +223,6 @@ void process_gcode_command() {
 	    tool = next_tool;
 	    _fblb_module_select(tool);
 		update_current_position();
-	    //serprintf(PSTR("M6: tool is now %x\n"), tool);
 		
 	}
 
@@ -357,11 +356,12 @@ void process_gcode_command() {
 					home();
 				}
 
-                                if (tool == 1)
-                                {
-                                  update_current_position();
-                                  SpecialMoveAB();
-                                }
+				//will need to switch on the current tool and do special moves accordingly
+				if (tool == 1)
+				{
+					update_current_position();
+					SpecialMoveAB();
+				}
 				break;
 
 			case 90:
@@ -604,7 +604,9 @@ void process_gcode_command() {
             next_target.P = HEATER_EXTRUDER;
         // else use the first available device
         #endif
-
+		  
+		  //TODO need to come back to this for compatibility with Slic3r
+		  // --> possibly parse M codes before T codes....
 		  //fblb version
 		  if(next_target.seen_T)
 		  {
@@ -714,7 +716,8 @@ void process_gcode_command() {
 					queue_wait();
 				#endif
 				update_current_position();
-
+				
+				//once again we will need to switch here on the selected tools
 				if (tool == 1)
 				  {
 				    current_position.X -= EXT_OFFSET_AB_X;

@@ -1,7 +1,8 @@
 /* Notice to developers: this file is intentionally included twice. */
 
 /** \file
-	\brief Sanguinololu configuration.
+ \brief RAMPS v1.3 Sample Configuration
+ http://reprap.org/wiki/Arduino_Mega_Pololu_Shield
 */
 
 /*
@@ -28,8 +29,8 @@
 
 	If you want to port this to a new chip, start off with arduino.h and see how you go.
 */
-#if ! ( defined (__AVR_ATmega644P__) || defined (__AVR_ATmega644PA__) )
-	#error Sanguinololu has a 644P/644PA! set your cpu type in Makefile!
+#if ! ( defined (__AVR_ATmega1280__) || defined (__AVR_ATmega2560__) )
+	#error RAMPS has 1280/2560! set your cpu type in Makefile!
 #endif
 
 /** \def F_CPU
@@ -67,7 +68,7 @@
 #define	STEPS_PER_M_Z					3333592
 
 /// http://blog.arcol.hu/?p=157 may help with this one
-#define	STEPS_PER_M_E					11036
+#define	STEPS_PER_M_E					225000//11036
 
 
 /*
@@ -81,12 +82,12 @@
 #define	MAXIMUM_FEEDRATE_X		3200 //200
 #define	MAXIMUM_FEEDRATE_Y		3200 //200
 #define	MAXIMUM_FEEDRATE_Z		100
-#define	MAXIMUM_FEEDRATE_E		200
+#define	MAXIMUM_FEEDRATE_E		600
 
 /// used when searching endstops and as default feedrate
 #define	SEARCH_FEEDRATE_X			50
 #define	SEARCH_FEEDRATE_Y			50
-#define	SEARCH_FEEDRATE_Z			50
+#define	SEARCH_FEEDRATE_Z			50 //1
 // no SEARCH_FEEDRATE_E, as E can't be searched
 
 /** \def SLOW_HOMING
@@ -96,8 +97,7 @@
 // #define	SLOW_HOMING
 
 /// this is how many steps to suck back the filament by when we stop. set to zero to disable
-#define	E_STARTSTOP_STEPS			20
-
+#define	E_STARTSTOP_STEPS			0
 
 /**
 	Soft axis limits, in mm.
@@ -213,60 +213,70 @@
 
 /** \def USE_INTERNAL_PULLUPS
 	internal pullup resistors
-		the ATmega has internal pullup resistors on it's input pins which are counterproductive with the commonly used eletronic endstops, so they should be 
-                 switched off. For other endstops, like mechanical ones, you may want to uncomment this.
+		the ATmega has internal pullup resistors on it's input pins which are counterproductive with the commonly used eletronic endstops, so they should be switched off. For other endstops, like mechanical ones, you may want to uncomment this.
 */
 #define USE_INTERNAL_PULLUPS
 
 /*
-	user defined pins
-	adjust to suit your electronics,
-	or adjust your electronics to suit this
+	This is for the RAMPS v1.3 shield
 */
+// TODO: 20110813 SJL - the following two are not yet used&verified for RAMPS1.3
+//#define TX_ENABLE_PIN					DIO12
+//#define	RX_ENABLE_PIN					DIO13
 
-#define	X_STEP_PIN						DIO15
-#define	X_DIR_PIN							DIO21
-#define	X_MIN_PIN							DIO18
-//#define	X_MAX_PIN							xxxx
-//#define	X_ENABLE_PIN					xxxx
+#define	X_STEP_PIN  					AIO0
+#define	X_DIR_PIN   					AIO1
+#define	X_MIN_PIN   					DIO3
+//#define	X_MAX_PIN   					DIO2
+#define	X_ENABLE_PIN					DIO38
 //#define	X_INVERT_DIR
-#define	X_INVERT_MIN
+//#define	X_INVERT_MIN
 //#define	X_INVERT_MAX
 //#define	X_INVERT_ENABLE
 
-#define	Y_STEP_PIN						DIO22
-#define	Y_DIR_PIN							DIO23
-#define	Y_MIN_PIN							DIO19
-//#define	Y_MAX_PIN							xxxx
-//#define	Y_ENABLE_PIN					xxxx
-//#define	Y_INVERT_DIR
-#define	Y_INVERT_MIN
+#define	Y_STEP_PIN  					AIO6
+#define	Y_DIR_PIN   					AIO7
+#define	Y_MIN_PIN   					DIO14
+//#define	Y_MAX_PIN   					DIO15
+#define	Y_ENABLE_PIN					AIO2
+#define	Y_INVERT_DIR
+//#define	Y_INVERT_MIN
 //#define	Y_INVERT_MAX
 //#define	Y_INVERT_ENABLE
 
-#define	Z_STEP_PIN						DIO3
-#define	Z_DIR_PIN							DIO2
-#define	Z_MIN_PIN							DIO20
-//#define	Z_MAX_PIN							xxxx
-#define	Z_ENABLE_PIN					DIO26
+#define	Z_STEP_PIN  					DIO46
+#define	Z_DIR_PIN   					DIO48
 #define	Z_INVERT_DIR
-#define	Z_INVERT_MIN
+#define	Z_MIN_PIN   					DIO18
+//#define	Z_MAX_PIN   					DIO19
+#define	Z_ENABLE_PIN					AIO8
+//#define	Z_INVERT_MIN
 //#define	Z_INVERT_MAX
-#define	Z_INVERT_ENABLE
+//#define	Z_INVERT_ENABLE
 
-#define	E_STEP_PIN						DIO1
-#define	E_DIR_PIN							DIO0
-//#define E_ENABLE_PIN					xxxx
+#define	E_STEP_PIN  					DIO26
+#define	E_DIR_PIN   					DIO28
+#define E_ENABLE_PIN          DIO24
 //#define	E_INVERT_DIR
-//#define	E_INVERT_ENABLE
+#define E_INVERT_ENABLE
 
-#define	PS_ON_PIN							DIO9
+//###
+#define	E1_STEP_PIN  					DIO26
+#define	E1_DIR_PIN   					DIO28
+#define E1_ENABLE_PIN          DIO24
+//#define	E1_INVERT_DIR
+#define E1_INVERT_ENABLE
+//###
+
+//#define	PS_ON_PIN							xxxx
 //#define PS_MOSFET_PIN         xxxx
-#define	STEPPER_ENABLE_PIN		DIO14
-#define	STEPPER_INVERT_ENABLE
+//#define	STEPPER_ENABLE_PIN		xxxx
+//#define	STEPPER_INVERT_ENABLE
 
-//#define	SD_CARD_DETECT		 		DIO2
+// TODO: 20110813 SJL - the following two are not yet used&verified for RAMPS1.3
+//#define	SD_CARD_DETECT				DIO2
 //#define	SD_WRITE_PROTECT			DIO3
+
 
 
 /***************************************************************************\
@@ -331,11 +341,10 @@
 #endif
 
 //                 name       type            pin        additional
-DEFINE_TEMP_SENSOR(extruder0,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(extruder1,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(extruder2,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(extruder3,  TT_AD595,  AIO1,      THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO1,      THERMISTOR_BED)
+DEFINE_TEMP_SENSOR(extruder0,  TT_AD595,  AIO11,     THERMISTOR_EXTRUDER)
+//DEFINE_TEMP_SENSOR(extruder1,  TT_AD595,  AIO13,     THERMISTOR_EXTRUDER)
+
+DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO12,     THERMISTOR_BED)
 
 
 
@@ -385,12 +394,11 @@ DEFINE_TEMP_SENSOR(bed,       TT_AD595,  AIO1,      THERMISTOR_BED)
 	#define DEFINE_HEATER(...)
 #endif
 
+// NOTE: these pins are for RAMPS V1.1 and newer. V1.0 is different
 //            name      port   pwm
-DEFINE_HEATER(extruder0, PD5,   1)
-DEFINE_HEATER(extruder1, PD5,   1)
-DEFINE_HEATER(extruder2, PD5,   1)
-DEFINE_HEATER(extruder3, PD5,   1)
-DEFINE_HEATER(bed,      PD4,   1)
+DEFINE_HEATER(extruder0, PB4,   1)
+DEFINE_HEATER(extruder1, PH6,   1)
+DEFINE_HEATER( bed,     PH5,   1)
 
 /// and now because the c preprocessor isn't as smart as it could be,
 /// uncomment the ones you've listed above and comment the rest.
@@ -400,9 +408,6 @@ DEFINE_HEATER(bed,      PD4,   1)
 
 #define	HEATER_EXTRUDER HEATER_extruder0
 //#define	HEATER_EXTRUDER HEATER_extruder1
-//#define	HEATER_EXTRUDER HEATER_extruder2
-//#define	HEATER_EXTRUDER HEATER_extruder3
-
 #define HEATER_BED HEATER_bed
 
 

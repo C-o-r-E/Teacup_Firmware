@@ -5,7 +5,6 @@
 */
 
 #include "temp.h"
-#include "sersendf.h"
 
 #include	<avr/interrupt.h>
 #include	"memory_barrier.h"
@@ -34,55 +33,6 @@ static uint8_t adc_channel[NUM_TEMP_SENSORS] =
   #include "config.h"
 };
 #undef DEFINE_TEMP_SENSOR
-
-void _fblb_analog_select_next(uint8_t index)
-{
-  
-  //make sure PA2 PA3 and PA4 are outputs
-  DDRA |= MASK(2);
-  DDRA |= MASK(3);
-  DDRA |= MASK(4);
-  
-  switch(index)
-    {  
-    case 0: //extruder0
-      //next reading should be extruder1
-      PORTA |= MASK(2);
-      PORTA &= ~MASK(3);
-      PORTA &= ~MASK(4);
-      break;
-      
-    case 1: //extruder1
-      //next reading should be extruder2
-      PORTA &= ~MASK(2);
-      PORTA |= MASK(3);
-      PORTA &= ~MASK(4);
-      break;
-      
-    case 2: //extruder2
-      //next reading should be extruder3
-      PORTA |= MASK(2);
-      PORTA |= MASK(3);
-      PORTA &= ~MASK(4);
-      break;
-      
-    case 3: //extruder3
-      //next reading should be base
-      PORTA &= ~MASK(2);
-      PORTA &= ~MASK(3);
-      PORTA |= MASK(4);
-      break;
-      
-    case 4: //base
-      //next reading should be extruder0
-      PORTA &= ~MASK(2);
-      PORTA &= ~MASK(3);
-      PORTA &= ~MASK(4);
-      break;
-    }  
-
-}
-
 
 
 //! Configure all registers, start interrupt loop
@@ -132,7 +82,6 @@ ISR(ADC_vect, ISR_NOBLOCK) {
 	if (analog_mask > 0) { // at least one temp sensor uses an analog channel
 		// store next result
 		adc_result[adc_counter] = ADC;
-		_fblb_analog_select_next(adc_counter);
 
 		// next channel
 		do {
@@ -161,23 +110,22 @@ ISR(ADC_vect, ISR_NOBLOCK) {
 */
 uint16_t	analog_read(uint8_t index) 
 {
-  //sersendf_P(PSTR("  analog(%d)\n"), index);
-  
-  if (analog_mask > 0) 
-  {
-    uint16_t r;
-    
-    ATOMIC_START
-      // atomic 16-bit copy
-      r = adc_result[index];
-    ATOMIC_END
-      
-      return r;
-  }
- else 
- {
-   return 0;
- }
-
+	
+	if (analog_mask > 0) 
+	{
+		uint16_t r;
+		
+		ATOMIC_START
+			// atomic 16-bit copy
+			r = adc_result[index];
+		ATOMIC_END
+			
+			return r;
+	}
+	else 
+	{
+		return 0;
+	}
+	
 }
 
